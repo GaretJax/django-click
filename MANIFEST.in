@@ -1,0 +1,15 @@
+include AUTHORS.rst
+include CONTRIBUTING.rst
+include HISTORY.rst
+include LICENSE
+include README.rst
+
+include requirements-dev.txt
+include requirements-test.txt
+include requirements.txt
+
+exclude .coveragerc
+exclude .travis.yml
+exclude tox.ini
+
+prune docs

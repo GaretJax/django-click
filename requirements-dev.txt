@@ -1,0 +1,22 @@
+-r requirements-test.txt
+
+# Automation
+Fabric
+livereload
+
+# Packaging
+wheel
+check-manifest
+
+# Code linting
+flake8
+mccabe
+pep8
+flake8-todo
+pep8-naming
+pyflakes
+
+# Documentation
+Sphinx
+sphinx-autobuild
+sphinx_rtd_theme
