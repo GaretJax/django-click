@@ -31,7 +31,7 @@ def test_not_ascii():
     try:
         preferred_encoding = locale.getpreferredencoding()
         fs_enc = codecs.lookup(preferred_encoding).name
-    except Exception:
+    except Exception:  # NOCOV
         fs_enc = 'ascii'
     assert fs_enc != 'ascii'
 
