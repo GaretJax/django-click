@@ -13,3 +13,4 @@ exclude .travis.yml
 exclude tox.ini
 
 prune docs
+prune djclick/test

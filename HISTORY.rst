@@ -2,8 +2,15 @@
 History
 =======
 
+0.1.1 – 2015-09-11
+==================
 
-0.1.0 – Unreleased
+* Django 1.4, 1.5, 1.6, 1.7 and 1.8 compatibility
+* Python 2.7 and 3.4 compatibility
+* 100% coverage test suite
+
+
+0.1.0 – 2015-09-10
 ==================
 
 * Initial release
