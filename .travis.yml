@@ -1,15 +1,34 @@
 language: python
 
-python:
-  - "2.7"
-  - "3.3"
-  - "3.4"
-  - "3.5"
+sudo: false
+
+env:
+  matrix:
+    - TOXENV=py27-dj15
+    - TOXENV=py27-dj16
+    - TOXENV=py27-dj17
+    - TOXENV=py27-dj18
+    - TOXENV=py34-dj15
+    - TOXENV=py34-dj16
+    - TOXENV=py34-dj17
+    - TOXENV=py34-dj18
+    - TOXENV=pypy19-dj15
+    - TOXENV=pypy19-dj16
+    - TOXENV=pypy19-dj17
+    - TOXENV=pypy19-dj18
+    - TOXENV=py27-dj14
+    - TOXENV=pypy19-dj14
+    - TOXENV=flake8
+
+cache:
+  directories:
+    - $HOME/.wheelhouse
 
 install:
-  - pip install -r requirements-test.txt
+  - pip install tox
   - pip install coveralls
 
-script: py.test --flake8 --cov djclick
+script:
+  - tox -e $TOXENV
 
 after_success: coveralls
