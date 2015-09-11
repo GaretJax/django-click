@@ -61,18 +61,19 @@ class Setup(object):
                     yield os.path.join(basedir, root, name)[rem:]
 
     @staticmethod
-    def version():
+    def get_metavar(name):
         data = Setup.read(os.path.join(PACKAGE, '__init__.py'))
-        version = (re.search(u"__version__\s*=\s*u?'([^']+)'", data)
+        value = (re.search(u"__{}__\s*=\s*u?'([^']+)'".format(name), data)
                    .group(1).strip())
-        return version
+        return value
+
+    @staticmethod
+    def version():
+        return Setup.get_metavar('version')
 
     @staticmethod
     def url():
-        data = Setup.read(os.path.join(PACKAGE, '__init__.py'))
-        version = (re.search(u"__url__\s*=\s*u?'([^']+)'", data)
-                   .group(1).strip())
-        return version
+        return Setup.get_metavar('url')
 
     @staticmethod
     def longdesc():
