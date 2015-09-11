@@ -14,18 +14,22 @@ class ParserAdapter(object):
 
 class CommandAdapter(click.Command):
     use_argparse = False
+    option_list = []
 
     def run_from_argv(self, argv):
         """
         Called when run from the command line.
         """
-        return self.main(args=argv[2:])
+        return self.main(args=argv[2:], standalone_mode=False)
 
     def create_parser(self, progname, subcommand):
         """
         Called when run through `call_command`.
         """
         return ParserAdapter()
+
+    def print_help(self, prog_name, subcommand):
+        self.main(['--help'], standalone_mode=False)
 
     def map_names(self):
         for param in self.params:
@@ -40,9 +44,9 @@ class CommandAdapter(click.Command):
         `call_command`.
         """
         # Remove internal Django command handling machinery
-        kwargs.pop('skip_checks')
-
-        with self.make_context('', list(args)) as ctx:
+        kwargs.pop('skip_checks', None)
+        parent_ctx = click.get_current_context(silent=True)
+        with self.make_context('', list(args), parent=parent_ctx) as ctx:
             # Rename kwargs to to the appropriate destination argument name
             opt_mapping = dict(self.map_names())
             arg_options = {opt_mapping.get(key, key): value
@@ -61,8 +65,10 @@ def register_on_context(ctx, param, value):
 
 
 def suppress_colors(ctx, param, value):
-    if value:
-        ctx.color = False
+    # Only set the value if a flag was provided, otherwise we would override
+    # the default set by the parent context if one was available.
+    if value is not None:
+        ctx.color = value
     return value
 
 
@@ -99,8 +105,8 @@ class CommandRegistrator(object):
             help='Raise on CommandError exceptions.',
         ),
         click.option(
-            '--no-color',
-            is_flag=True,
+            '--color/--no-color',
+            default=None,
             expose_value=False,
             callback=suppress_colors,
             help='Do not colorize the command output.',
@@ -139,12 +145,15 @@ class CommandRegistrator(object):
             click.command(name=self.name, cls=CommandAdapter, **self.kwargs),
         ] + self.get_params(self.name)
 
+        command = func
         for decorator in reversed(decorators):
-            func = decorator(func)
+            command = decorator(command)
 
         # Django expects the command to be callable (it instantiates the class
         # pointed at by the `Command` module-level property)...
         # ...let's make it happy.
-        module.Command = lambda: func
+        module.Command = lambda: command
 
-        return func
+        # Return the execute method, as this allows us to call the command
+        # directly (similarly as with `call_command`)
+        return command.execute
