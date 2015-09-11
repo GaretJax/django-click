@@ -23,8 +23,8 @@ Django Click
 .. image:: https://img.shields.io/requires/github/GaretJax/django-click.svg
    :target: https://requires.io/github/GaretJax/django-click/requirements/?branch=master
 
-.. .. image:: https://img.shields.io/codeclimate/github/GaretJax/django-click.svg
-..   :target: https://codeclimate.com/github/GaretJax/django-click
+.. image:: https://img.shields.io/codeclimate/github/GaretJax/django-click.svg
+   :target: https://codeclimate.com/github/GaretJax/django-click
 
 django-click is a library to easily write django management commands using the
 click command line library.
