@@ -18,7 +18,8 @@ todo = pytest.mark.xfail(reason='TODO')
 
 @pytest.mark.skipif(not six.PY3, reason='Only necessary on Python3')
 def test_not_ascii():
-    """Make sure that the systems preferred encoding is not `ascii`.
+    """
+    Make sure that the systems preferred encoding is not `ascii`.
 
     Otherwise `click` is raising a RuntimeError for Python3. For a detailed
     description of this very problem please consult the following gist:
@@ -95,15 +96,14 @@ def test_django_traceback():
     assert False
 
 
-@pytest.mark.xfail(six.PY3, reason='Encoding issues')
 def test_django_settings(manage):
     # The --settings switch only works from the command line (or if the django
     # settings where not setup before... this means that we have to call it
     # in a subprocess.
     cmd = 'settingscmd'
-    assert manage(cmd) == 'default'
-    assert manage(cmd, '--settings', 'testprj.settings') == 'default'
-    assert manage(cmd, '--settings', 'testprj.settings_alt') == 'alternative'
+    assert manage(cmd) == b'default'
+    assert manage(cmd, '--settings', 'testprj.settings') == b'default'
+    assert manage(cmd, '--settings', 'testprj.settings_alt') == b'alternative'
 
 
 def test_django_color(capsys):
@@ -126,7 +126,6 @@ def test_django_color(capsys):
     assert err == 'stderr'
 
 
-@pytest.mark.xfail(six.PY3, reason='Encoding issues')
 def test_django_help(manage):
     # The -h/--help switches cause the program to exit. Invoking the command
     # through execute_from_command_line would cause the test suit to exit as
@@ -139,8 +138,8 @@ def test_django_help(manage):
     assert len(set(helps)) == 1
 
     help_text = helps[0]
-    assert 'HELP_CALLED' not in help_text
-    assert help_text.startswith('Usage: manage.py helpcmd ')
+    assert b'HELP_CALLED' not in help_text
+    assert help_text.startswith(b'Usage: manage.py helpcmd ')
 
 
 @todo

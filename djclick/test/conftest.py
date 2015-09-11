@@ -51,6 +51,7 @@ def test_project():
 def manage():
     def call(*args):
         cmd = [
+            sys.executable,
             os.path.join(os.path.dirname(__file__), 'testprj', 'manage.py'),
         ] + list(args)
         return subprocess.check_output(cmd)
