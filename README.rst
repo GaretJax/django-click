@@ -50,7 +50,8 @@ Example
 =======
 
 Create a command module as you would usually do, but instead of creating a
-class, just put a djclick command into it:
+class, just put a ``djclick`` command into
+``<yourapp>/management/commands/helloworld.py``:
 
 .. code:: python
 
@@ -60,3 +61,12 @@ class, just put a djclick command into it:
    @click.argument('name')
    def command(name):
       click.secho('Hello, {}'.format(name), fg='red')
+
+And then call the command with::
+
+   $ ./manage.py helloworld django-click
+   Hello, django-click
+
+Check out the `test commands
+<https://github.com/GaretJax/django-click/tree/master/djclick/test/testprj/testapp/management/commands>`_
+for additional example commands and advanced usage.
