@@ -1,5 +1,7 @@
+import os
 import locale
 import codecs
+import subprocess
 
 import six
 
@@ -7,6 +9,7 @@ import pytest
 
 import click
 
+import django
 from django.core.management import get_commands, call_command
 from django.core.management import execute_from_command_line
 
@@ -81,24 +84,77 @@ def test_call_directly():
         command(**{'raise': True})
 
 
-@todo
-def test_django_verbosity():
-    assert False
+def test_django_verbosity(capsys):
+    # Make sure any command can be called, even if it does not explictly
+    # accept the --verbosity option
+    with pytest.raises(RuntimeError):
+        execute_from_command_line([
+            './manage.py', 'testcmd', '--raise', '--verbosity', '1'])
+
+    # Default
+    execute_from_command_line([
+        './manage.py', 'ctxverbositycmd'])
+    out, err = capsys.readouterr()
+    assert out == '1'
+
+    # Explicit
+    execute_from_command_line([
+        './manage.py', 'ctxverbositycmd', '--verbosity', '2'])
+    out, err = capsys.readouterr()
+    assert out == '2'
+
+    # Invalid
+    with pytest.raises(click.BadParameter):
+        execute_from_command_line([
+            './manage.py', 'ctxverbositycmd', '--verbosity', '4'])
+
+    # Default (option)
+    execute_from_command_line([
+        './manage.py', 'argverbositycommand'])
+    out, err = capsys.readouterr()
+    assert out == '1'
+
+    # Explicit (option)
+    execute_from_command_line([
+        './manage.py', 'argverbositycommand', '--verbosity', '2'])
+    out, err = capsys.readouterr()
+    assert out == '2'
 
 
-@todo
-def test_django_pythonpath():
-    assert False
+def test_django_pythonpath(manage):
+    with pytest.raises(subprocess.CalledProcessError):
+        manage('pathcmd')
+
+    manage('pathcmd', '--pythonpath',
+           os.path.join(os.path.dirname(__file__), 'testdir')) == b'1'
 
 
-@todo
-def test_django_traceback():
-    assert False
+def test_django_traceback(manage):
+    try:
+        manage('errcmd')
+    except subprocess.CalledProcessError as e:
+        assert e.output == b'CommandError: Raised error description\n'
+        assert e.returncode == 1
+    else:
+        assert False
+
+    try:
+        manage('errcmd', '--traceback')
+    except subprocess.CalledProcessError as e:
+        lines = e.output.splitlines()
+        assert lines[0] == b'Traceback (most recent call last):'
+        for line in lines[1:-1]:
+            assert line.startswith(b'  ')
+        assert lines[-1] == (b'django.core.management.base.CommandError: '
+                             b'Raised error description')
+        assert e.returncode == 1
+    else:
+        assert False
 
 
 def test_django_settings(manage):
     # The --settings switch only works from the command line (or if the django
-    # settings where not setup before... this means that we have to call it
+    # settings where not setup before)... this means that we have to call it
     # in a subprocess.
     cmd = 'settingscmd'
     assert manage(cmd) == b'default'
@@ -110,8 +166,8 @@ def test_django_color(capsys):
     call_command('colorcmd')
     out, err = capsys.readouterr()
     # Not passing a --color/--no-color flag defaults to autodetection. As the
-    # command is run through the test suite, the autodetection defaults to
-    # --no-color
+    # command is run through the test suite, the autodetection defaults to not
+    # colorizing the output.
     assert out == 'stdout'
     assert err == 'stderr'
 
@@ -142,6 +198,12 @@ def test_django_help(manage):
     assert help_text.startswith(b'Usage: manage.py helpcmd ')
 
 
-@todo
-def test_django_version():
-    assert False
+def test_django_version(manage):
+    django_version = django.get_version().encode('ascii') + b'\n'
+    if django.VERSION < (1, 8):
+        prefix = django_version
+    else:
+        prefix = b''
+    assert manage('testcmd', '--version') == prefix + django_version
+    assert manage('versioncmd', '--version') == prefix + b'20.0\n'
+

@@ -2,6 +2,13 @@
 History
 =======
 
+0.2.0 – Unreleased
+==================
+
+* Added a ``pass_verbosity`` decorator
+* Improved test suite
+
+
 0.1.1 – 2015-09-11
 ==================
 
