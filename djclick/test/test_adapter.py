@@ -136,7 +136,7 @@ def test_django_traceback(manage):
         assert e.output == b'CommandError: Raised error description\n'
         assert e.returncode == 1
     else:
-        assert False
+        assert False  # NOCOV
 
     try:
         manage('errcmd', '--traceback')
@@ -149,7 +149,7 @@ def test_django_traceback(manage):
                              b'Raised error description')
         assert e.returncode == 1
     else:
-        assert False
+        assert False  # NOCOV
 
 
 def test_django_settings(manage):
