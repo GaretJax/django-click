@@ -207,3 +207,16 @@ def test_django_version(manage):
     assert manage('testcmd', '--version') == prefix + django_version
     assert manage('versioncmd', '--version') == prefix + b'20.0\n'
 
+
+def test_group_command(capsys):
+    execute_from_command_line(['./manage.py', 'groupcmd'])
+    out, err = capsys.readouterr()
+    assert out == 'group_command\n'
+
+    execute_from_command_line(['./manage.py', 'groupcmd', 'subcmd1'])
+    out, err = capsys.readouterr()
+    assert out == 'group_command\nSUB1\n'
+
+    execute_from_command_line(['./manage.py', 'groupcmd', 'subcmd3'])
+    out, err = capsys.readouterr()
+    assert out == 'group_command\nSUB2\n'

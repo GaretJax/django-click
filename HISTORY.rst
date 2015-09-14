@@ -5,6 +5,7 @@ History
 0.2.0 – Unreleased
 ==================
 
+* Support for command groups
 * Added a ``pass_verbosity`` decorator
 * Improved test suite
 

@@ -1,10 +1,12 @@
 import sys
+from functools import update_wrapper
 
 import six
 
 import click
 
 from django import get_version
+from django.core.management import CommandError
 
 
 class ParserAdapter(object):
@@ -12,9 +14,19 @@ class ParserAdapter(object):
         return (self, None)
 
 
-class CommandAdapter(click.Command):
+class DjangoCommandMixin(object):
     use_argparse = False
     option_list = []
+
+    def invoke(self, ctx):
+        try:
+            return super(DjangoCommandMixin, self).invoke(ctx)
+        except CommandError as e:
+            # Honor the --traceback flag
+            if ctx.traceback:
+                raise
+            click.echo('{}: {}'.format(e.__class__.__name__, e), err=True)
+            ctx.exit(1)
 
     def run_from_argv(self, argv):
         """
@@ -58,6 +70,25 @@ class CommandAdapter(click.Command):
             # Invoke the command
             self.invoke(ctx)
 
+    def __call__(self, *args, **kwargs):
+        """
+        When invoked, normal click commands act as entry points for command
+        line execution. When using Django, commands get invoked either through
+        the `execute_from_command_line` or `call_command` utilities.
+
+        Calling a command directly can thus be just a shortcut for calling its
+        `execute` method.
+        """
+        return self.execute(*args, **kwargs)
+
+
+class CommandAdapter(DjangoCommandMixin, click.Command):
+    pass
+
+
+class GroupAdapter(DjangoCommandMixin, click.Group):
+    pass
+
 
 def register_on_context(ctx, param, value):
     setattr(ctx, param.name, value)
@@ -72,13 +103,14 @@ def suppress_colors(ctx, param, value):
     return value
 
 
-class CommandRegistrator(object):
+class BaseRegistrator(object):
     common_options = [
         click.option(
             '-v', '--verbosity',
             expose_value=False,
+            default='1',
             callback=register_on_context,
-            type=click.Choice(str(s) for s in range(4)),
+            type=click.IntRange(min=0, max=3),
             help=('Verbosity level; 0=minimal output, 1=normal ''output, '
                   '2=verbose output, 3=very verbose output.'),
         ),
@@ -98,8 +130,9 @@ class CommandRegistrator(object):
                   '"/home/djangoprojects/myproject".'),
         ),
         click.option(
-            '--traceback',
+            '--traceback/--no-traceback',
             is_flag=True,
+            default=False,
             expose_value=False,
             callback=register_on_context,
             help='Raise on CommandError exceptions.',
@@ -109,7 +142,8 @@ class CommandRegistrator(object):
             default=None,
             expose_value=False,
             callback=suppress_colors,
-            help='Do not colorize the command output.',
+            help=('Enable or disable output colorization. Default is to '
+                  'autodetect the best behavior.'),
         ),
     ]
 
@@ -142,18 +176,33 @@ class CommandRegistrator(object):
 
         # Build the click command
         decorators = [
-            click.command(name=self.name, cls=CommandAdapter, **self.kwargs),
+            click.command(name=self.name, cls=self.cls, **self.kwargs),
         ] + self.get_params(self.name)
 
-        command = func
         for decorator in reversed(decorators):
-            command = decorator(command)
+            func = decorator(func)
 
         # Django expects the command to be callable (it instantiates the class
         # pointed at by the `Command` module-level property)...
         # ...let's make it happy.
-        module.Command = lambda: command
+        module.Command = lambda: func
 
-        # Return the execute method, as this allows us to call the command
-        # directly (similarly as with `call_command`)
-        return command.execute
+        return func
+
+
+def pass_verbosity(f):
+    """
+    Marks a callback as wanting to receive the verbosity as a keyword argument.
+    """
+    def new_func(*args, **kwargs):
+        kwargs['verbosity'] = click.get_current_context().verbosity
+        return f(*args, **kwargs)
+    return update_wrapper(new_func, f)
+
+
+class CommandRegistrator(BaseRegistrator):
+    cls = CommandAdapter
+
+
+class GroupRegistrator(BaseRegistrator):
+    cls = GroupAdapter
