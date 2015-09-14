@@ -10,7 +10,7 @@ Project information:
 .. image:: https://img.shields.io/pypi/dm/django-click.svg
    :target: https://pypi.python.org/pypi/django-click
 
-.. image:: https://img.shields.io/badge/docs-latest-brightgreen.svg
+.. image:: https://img.shields.io/badge/docs-TODO-lightgrey.svg
    :target: http://django-click.readthedocs.org/en/latest/
 
 .. image:: https://img.shields.io/pypi/l/django-click.svg
@@ -34,7 +34,7 @@ Automated code metrics:
 ``click`` command line library.
 
 * Free software: MIT license
-* Documentation: http://django-click.rtfd.org
+* Documentation: http://django-click.rtfd.org (TODO)
 * Compatible with Django 1.4, 1.5, 1.6, 1.7 and 1.8, running on Python 2.7, 3.4 and PyPy
 
 
