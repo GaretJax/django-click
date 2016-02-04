@@ -4,12 +4,25 @@ import io
 import os
 import re
 import sys
+import glob
 
 from setuptools import setup, find_packages
 
 
 PACKAGE = 'djclick'
 PACKAGE_NAME = 'django-click'
+DESCRIPTION = 'Write Django management command using the click CLI library'
+CLASSIFIERS = [
+    'Development Status :: 4 - Beta',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.3',
+    'Programming Language :: Python :: 3.4',
+]
 
 
 if sys.argv[-1] == 'publish':
@@ -43,7 +56,18 @@ class Setup(object):
         packages = (p.strip() for p in packages)
         packages = (p for p in packages if p and not p.startswith('#'))
         packages = (p for p in packages if p and not p.startswith('https://'))
+        packages = (p for p in packages if p and not p.startswith('-r '))
         return list(packages)
+
+    @classmethod
+    def extra_requirements(cls, glob_pattern):
+        before, after = glob_pattern.split('*', 1)
+        pattern = os.path.join(os.path.dirname(__file__), glob_pattern)
+        requirements = {}
+        for path in glob.glob(pattern):
+            name = path[len(before):-len(after)]
+            requirements[name] = cls.requirements(path)
+        return requirements
 
     @staticmethod
     def get_files(*bases):
@@ -67,13 +91,25 @@ class Setup(object):
                    .group(1).strip())
         return value
 
-    @staticmethod
-    def version():
-        return Setup.get_metavar('version')
+    @classmethod
+    def version(cls):
+        return cls.get_metavar('version')
 
-    @staticmethod
-    def url():
-        return Setup.get_metavar('url')
+    @classmethod
+    def url(cls):
+        return cls.get_metavar('url')
+
+    @classmethod
+    def author(cls):
+        return cls.get_metavar('author')
+
+    @classmethod
+    def email(cls):
+        return cls.get_metavar('email')
+
+    @classmethod
+    def license(cls):
+        return cls.get_metavar('license')
 
     @staticmethod
     def longdesc():
@@ -101,26 +137,17 @@ Setup.test_links()
 
 setup(name=PACKAGE_NAME,
       version=Setup.version(),
-      author='Jonathan Stoppani',
-      author_email='jonathan@stoppani.name',
+      author=Setup.author(),
+      author_email=Setup.email(),
       include_package_data=True,
       zip_safe=False,
       url=Setup.url(),
-      license='MIT',
+      license=Setup.license(),
       packages=find_packages(),
       package_dir={PACKAGE: PACKAGE},
-      description='Helpers for dealing with application settings',
+      description=DESCRIPTION,
       install_requires=Setup.requirements('requirements.txt'),
+      extras_require=Setup.extra_requirements('requirements-*.txt'),
       long_description=Setup.longdesc(),
       entry_points=Setup.read('entry-points.ini', True),
-      classifiers=[
-          'Development Status :: 4 - Beta',
-          'Intended Audience :: Developers',
-          'License :: OSI Approved :: MIT License',
-          'Operating System :: OS Independent',
-          'Programming Language :: Python',
-          'Programming Language :: Python :: 2.7',
-          'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.3',
-          'Programming Language :: Python :: 3.4',
-      ])
+      classifiers=CLASSIFIERS)
