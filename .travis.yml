@@ -12,6 +12,10 @@ env:
     - TOXENV=py34-dj16
     - TOXENV=py34-dj17
     - TOXENV=py34-dj18
+    - TOXENV=py35-dj15
+    - TOXENV=py35-dj16
+    - TOXENV=py35-dj17
+    - TOXENV=py35-dj18
     - TOXENV=pypy19-dj15
     - TOXENV=pypy19-dj16
     - TOXENV=pypy19-dj17
