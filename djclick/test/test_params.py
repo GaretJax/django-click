@@ -19,14 +19,14 @@ def test_modelinstance_init():
 
 
 def test_convert_ok(manage):
-    assert manage('modelcmd', 'MODEL') == 'MODEL'
+    assert manage('modelcmd', 'MODEL') == b'MODEL'
 
 
 def test_convert_fail(manage):
     try:
         manage('modelcmd', 'ND')
     except subprocess.CalledProcessError as e:
-        lines = e.output.splitlines()
+        lines = e.output.strip().splitlines()
         assert lines[0] == b'Traceback (most recent call last):'
         for line in lines[1:-1]:
             assert line.startswith(b'  ')
