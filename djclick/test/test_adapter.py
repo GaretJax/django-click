@@ -20,7 +20,7 @@ todo = pytest.mark.xfail(reason='TODO')
 
 
 @pytest.mark.skipif(not six.PY3, reason='Only necessary on Python3')
-def test_not_ascii():
+def test_not_ascii():  # NOCOV
     """
     Make sure that the systems preferred encoding is not `ascii`.
 
@@ -34,7 +34,7 @@ def test_not_ascii():
     try:
         preferred_encoding = locale.getpreferredencoding()
         fs_enc = codecs.lookup(preferred_encoding).name
-    except Exception:  # NOCOV
+    except Exception:
         fs_enc = 'ascii'
     assert fs_enc != 'ascii'
 
