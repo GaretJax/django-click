@@ -2,6 +2,14 @@
 History
 =======
 
+
+1.1.0 - 2016-02-04
+==================
+
+* Add a ``ModelInstance`` parameter type to automatically retrieve model
+  instances by their primary key
+
+
 1.0.0 – 2015-09-14
 ==================
 
