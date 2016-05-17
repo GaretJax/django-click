@@ -19,5 +19,8 @@ class ModelInstance(click.ParamType):
         try:
             return self.qs.get(pk=value)
         except ObjectDoesNotExist:
-            msg = 'could not find {} with pk={}'.format(self.name, value)
-            self.fail(msg, param, ctx)
+            pass
+        # call `fail` outside of exception context to avoid nested exception
+        # handling on Python 3
+        msg = 'could not find {} with pk={}'.format(self.name, value)
+        self.fail(msg, param, ctx)
