@@ -1,5 +1,5 @@
-import pytest
 from click.exceptions import BadParameter
+import pytest
 
 from djclick import params
 
@@ -18,17 +18,37 @@ def test_modelinstance_init():
 
 
 @pytest.mark.django_db
-def test_convert_ok(call_command):
+@pytest.mark.parametrize(
+    ('arg', 'value'),
+    (
+        ('--pk', '99'),
+        ('--slug', 'test'),
+        ('--endswith', 'st'),
+    )
+)
+def test_convert_ok(call_command, arg, value):
     from testapp.models import DummyModel
 
-    DummyModel.objects.create()
-    assert call_command('modelcmd', '1').stdout == b'1'
+    DummyModel.objects.create(slug='test')
+    expected = b'<DummyModel: 1>'
+
+    assert call_command('modelcmd', '--pk', '1').stdout == expected
+    assert call_command('modelcmd', '--slug', 'test').stdout == expected
+    assert call_command('modelcmd', '--endswith', 'test').stdout == expected
 
 
 @pytest.mark.django_db
-def test_convert_fail(call_command):
+@pytest.mark.parametrize(
+    ('args', 'error_message'),
+    (
+        (('--pk', '99'), "pk=99"),
+        (('--slug', 'doesnotexist'), "slug=doesnotexist"),
+    )
+)
+def test_convert_fail(call_command, args, error_message):
     with pytest.raises(BadParameter) as e:
-        call_command('modelcmd', '999')
+        call_command('modelcmd', *args)
     # Use `.endswith()` because of differences between CPython and pypy
-    assert str(e).endswith('BadParameter: could not find '
-                           'testapp.DummyModel with pk=999')
+    assert str(e).endswith(
+        'BadParameter: could not find testapp.DummyModel with {}'.format(
+            error_message))
