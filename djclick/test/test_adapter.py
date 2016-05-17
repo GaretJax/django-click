@@ -145,8 +145,8 @@ def test_django_traceback(manage):
         assert lines[0] == b'Traceback (most recent call last):'
         for line in lines[1:-1]:
             assert line.startswith(b'  ')
-        assert lines[-1] == (b'django.core.management.base.CommandError: '
-                             b'Raised error description')
+        # Use `.endswith()` because of differences between CPython and pypy
+        assert lines[-1].endswith(b'CommandError: Raised error description')
         assert e.returncode == 1
     else:
         assert False  # NOCOV

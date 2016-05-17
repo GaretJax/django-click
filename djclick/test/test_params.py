@@ -27,11 +27,12 @@ def test_convert_fail(manage):
         manage('modelcmd', 'ND')
     except subprocess.CalledProcessError as e:
         lines = e.output.strip().splitlines()
-        assert lines[0] == b'Traceback (most recent call last):'
+        assert b'Traceback (most recent call last):' == lines[0]
         for line in lines[1:-1]:
             assert line.startswith(b'  ')
-        assert lines[-1] == (b'click.exceptions.BadParameter: '
-                             b'could not find testapp.DummyModel with pk=ND')
+        # Use `.endswith()` because of differences between CPython and pypy
+        assert lines[-1].endswith(b'BadParameter: could not find '
+                                  b'testapp.DummyModel with pk=ND')
         assert e.returncode == 1
     else:
         assert False  # NOCOV
