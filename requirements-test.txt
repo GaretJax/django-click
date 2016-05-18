@@ -1,5 +1,6 @@
 -r requirements.txt
 
 pytest
+pytest-django
 pytest-cov
 pytest-flake8

@@ -1,12 +1,11 @@
-import os
-import subprocess
+import pytest
+from click.exceptions import BadParameter
 
 from djclick import params
 
 
+@pytest.mark.django_db
 def test_modelinstance_init():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'testprj.settings')
-
     from testapp.models import DummyModel
     from django.db.models.query import QuerySet
 
@@ -18,20 +17,18 @@ def test_modelinstance_init():
     assert param.qs is qs
 
 
-def test_convert_ok(manage):
-    assert manage('modelcmd', 'MODEL') == b'MODEL'
+@pytest.mark.django_db
+def test_convert_ok(call_command):
+    from testapp.models import DummyModel
+
+    DummyModel.objects.create()
+    assert call_command('modelcmd', '1').stdout == b'1'
 
 
-def test_convert_fail(manage):
-    try:
-        manage('modelcmd', 'ND')
-    except subprocess.CalledProcessError as e:
-        lines = e.output.strip().splitlines()
-        assert lines[0] == b'Traceback (most recent call last):'
-        for line in lines[1:-1]:
-            assert line.startswith(b'  ')
-        assert lines[-1] == (b'click.exceptions.BadParameter: '
-                             b'could not find testapp.DummyModel with pk=ND')
-        assert e.returncode == 1
-    else:
-        assert False  # NOCOV
+@pytest.mark.django_db
+def test_convert_fail(call_command):
+    with pytest.raises(BadParameter) as e:
+        call_command('modelcmd', '999')
+    # Use `.endswith()` because of differences between CPython and pypy
+    assert str(e).endswith('BadParameter: could not find '
+                           'testapp.DummyModel with pk=999')
