@@ -21,7 +21,7 @@ def test_modelinstance_init():
 @pytest.mark.parametrize(
     ('arg', 'value'),
     (
-        ('--pk', '99'),
+        ('--pk', '1'),
         ('--slug', 'test'),
         ('--endswith', 'st'),
     )
@@ -29,12 +29,10 @@ def test_modelinstance_init():
 def test_convert_ok(call_command, arg, value):
     from testapp.models import DummyModel
 
-    DummyModel.objects.create(slug='test')
+    DummyModel.objects.create(pk=1, slug='test')
     expected = b'<DummyModel: 1>'
 
-    assert call_command('modelcmd', '--pk', '1').stdout == expected
-    assert call_command('modelcmd', '--slug', 'test').stdout == expected
-    assert call_command('modelcmd', '--endswith', 'test').stdout == expected
+    assert call_command('modelcmd', arg, value).stdout == expected
 
 
 @pytest.mark.django_db
