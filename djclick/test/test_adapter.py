@@ -164,7 +164,7 @@ def test_django_settings(manage):
 
 def test_django_color(capsys):
     call_command('colorcmd')
-s    out, err = capsys.readouterr()
+    out, err = capsys.readouterr()
     # Not passing a --color/--no-color flag defaults to autodetection. As the
     # command is run through the test suite, the autodetection defaults to not
     # colorizing the output.
