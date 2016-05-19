@@ -3,6 +3,12 @@ History
 =======
 
 
+1.2.0 - 2016-05-19
+==================
+
+* Allow custom lookups on ``ModelInstance`` parameter types.
+
+
 1.1.0 - 2016-02-04
 ==================
 
