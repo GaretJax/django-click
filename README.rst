@@ -34,8 +34,8 @@ Automated code metrics:
 ``click`` command line library.
 
 * Free software: MIT license
-* Documentation: http://django-click.rtfd.org (TODO)
-* Compatible with Django 1.4, 1.5, 1.6, 1.7 and 1.8, running on Python 2.7, 3.4 and PyPy
+* Documentation for the Click command line library: http://click.pocoo.org/6/
+* Compatible with Django 1.8, 1.10, and 1.11, running on Python 2.7, 3.4, 3.5, 3.6 and PyPy.
 
 
 Installation
@@ -60,7 +60,7 @@ class, just put a ``djclick`` command into
    @click.command()
    @click.argument('name')
    def command(name):
-      click.secho('Hello, {}'.format(name), fg='red')
+       click.secho('Hello, {}'.format(name), fg='red')
 
 And then call the command with::
 
