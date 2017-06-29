@@ -11,25 +11,19 @@ addons:
 
 env:
   matrix:
-    - TOXENV=py27-dj14
-    - TOXENV=py27-dj15
-    - TOXENV=py27-dj16
-    - TOXENV=py27-dj17
     - TOXENV=py27-dj18
-    - TOXENV=py27-dj19
-    - TOXENV=py34-dj15
-    - TOXENV=py34-dj16
-    - TOXENV=py34-dj17
+    - TOXENV=py27-dj110
     - TOXENV=py34-dj18
-    - TOXENV=py34-dj19
+    - TOXENV=py34-dj110
     - TOXENV=py35-dj18
-    - TOXENV=py35-dj19
-    - TOXENV=pypy-dj14
-    - TOXENV=pypy-dj15
-    - TOXENV=pypy-dj16
-    - TOXENV=pypy-dj17
+    - TOXENV=py35-dj110
     - TOXENV=pypy-dj18
-    - TOXENV=pypy-dj19
+    - TOXENV=pypy-dj110
+    - TOXENV=py27-dj111
+    - TOXENV=py34-dj111
+    - TOXENV=py35-dj111
+    - TOXENV=py36-dj111
+    - TOXENV=pypy-dj111
     - TOXENV=flake8
 
 cache:
