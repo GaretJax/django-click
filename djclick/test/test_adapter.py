@@ -184,7 +184,7 @@ def test_django_color(capsys):
 
 def test_django_help(manage):
     # The -h/--help switches cause the program to exit. Invoking the command
-    # through execute_from_command_line would cause the test suit to exit as
+    # through execute_from_command_line would cause the test suite to exit as
     # well... this means that we have to call it in a subprocess.
     helps = [
         manage('helpcmd', '-h'),

@@ -5,13 +5,31 @@ import six
 
 import click
 
-from django import get_version
+from django import get_version, VERSION as DJANGO_VERSION
 from django.core.management import CommandError
 
 
-class ParserAdapter(object):
+class OptionParseAdapter(object):
     def parse_args(self, args):
         return (self, None)
+
+
+class ArgumentParserDefaults(object):
+    def __init__(self, args):
+        self._args = args
+
+    def _get_kwargs(self):
+        return {
+            'args': self._args,
+        }
+
+
+class ArgumentParserAdapter(object):
+    def __init__(self):
+        self._actions = []
+
+    def parse_args(self, args):
+        return ArgumentParserDefaults(args)
 
 
 class DjangoCommandMixin(object):
@@ -38,7 +56,10 @@ class DjangoCommandMixin(object):
         """
         Called when run through `call_command`.
         """
-        return ParserAdapter()
+        if DJANGO_VERSION >= (1, 10):
+            return ArgumentParserAdapter()
+        else:
+            return OptionParseAdapter()
 
     def print_help(self, prog_name, subcommand):
         self.main(['--help'], standalone_mode=False)
