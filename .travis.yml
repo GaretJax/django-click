@@ -9,6 +9,8 @@ addons:
     packages:
       - python3.5
 
+python: 3.6
+
 env:
   matrix:
     - TOXENV=py27-dj18
