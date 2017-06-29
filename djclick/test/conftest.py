@@ -8,12 +8,19 @@ import pytest
 
 @pytest.fixture(scope='session')
 def manage():
-    def call(*args):
+    def call(*args, **kwargs):
+        ignore_errors = kwargs.pop('ignore_errors', False)
+        assert not kwargs
         cmd = [
             sys.executable,
             os.path.join(os.path.dirname(__file__), 'testprj', 'manage.py'),
         ] + list(args)
-        return subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+        try:
+            return subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            if not ignore_errors:
+                raise
+            return e.output
 
     return call
 

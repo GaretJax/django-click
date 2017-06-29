@@ -50,7 +50,13 @@ class DjangoCommandMixin(object):
         """
         Called when run from the command line.
         """
-        return self.main(args=argv[2:], standalone_mode=False)
+        try:
+            return self.main(args=argv[2:], standalone_mode=False)
+        except click.ClickException as e:
+            if getattr(e.ctx, 'traceback', False):
+                raise
+            e.show()
+            sys.exit(e.exit_code)
 
     def create_parser(self, progname, subcommand):
         """
@@ -68,6 +74,10 @@ class DjangoCommandMixin(object):
         for param in self.params:
             for opt in param.opts:
                 yield opt.lstrip('--').replace('-', '_'), param.name
+
+    def collect_usage_pieces(self, ctx):
+        pieces = super(DjangoCommandMixin, self).collect_usage_pieces(ctx)
+        return [self.name] + pieces
 
     def execute(self, *args, **kwargs):
         """

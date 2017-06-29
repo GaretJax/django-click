@@ -60,6 +60,21 @@ def test_call_command_args():
         call_command('testcmd', '--raise')
 
 
+def test_call_command_required_args():
+    call_command('requiredargcmd', 'arg1')
+    with pytest.raises(click.MissingParameter):
+        call_command('requiredargcmd')
+
+
+def test_call_command_required_args_cli(manage):
+    out = manage('requiredargcmd', ignore_errors=True)
+    assert out == (
+        b'Usage: manage.py requiredargcmd [OPTIONS] ARG\n'
+        b'\n'
+        b'Error: Missing argument "arg".\n'
+    )
+
+
 def test_call_command_kwargs():
     call_command('testcmd', raise_when_called=False)
     with pytest.raises(RuntimeError):
@@ -84,7 +99,7 @@ def test_call_directly():
         command(**{'raise': True})
 
 
-def test_django_verbosity(capsys):
+def test_django_verbosity(capsys, manage):
     # Make sure any command can be called, even if it does not explictly
     # accept the --verbosity option
     with pytest.raises(RuntimeError):
@@ -104,9 +119,13 @@ def test_django_verbosity(capsys):
     assert out == '2'
 
     # Invalid
-    with pytest.raises(click.BadParameter):
-        execute_from_command_line([
-            './manage.py', 'ctxverbositycmd', '--verbosity', '4'])
+    out = manage('ctxverbositycmd', '--verbosity', '4', ignore_errors=True)
+    assert out == (
+        b'Usage: manage.py ctxverbositycmd [OPTIONS]\n'
+        b'\n'
+        b'Error: Invalid value for "-v" / "--verbosity": 4 is not in the '
+        b'valid range of 0 to 3.\n'
+    )
 
     # Default (option)
     execute_from_command_line([
