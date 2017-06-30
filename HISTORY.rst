@@ -3,6 +3,17 @@ History
 =======
 
 
+2.0.0 - 2017-06-30
+==================
+
+* Drop support for unsupported Django versions (1.4, 1.5, 1.6, and 1.7).
+* Add official support for Django 1.10 and 1.11.
+* Add official support for python 3.5 (all Django versions) and 3.6
+  (Django 1.11 only).
+* Correctly handle click errors by outputting the formatted messages instead
+  of a stack trace (#4).
+
+
 1.2.0 - 2016-05-19
 ==================
 
