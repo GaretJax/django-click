@@ -57,6 +57,8 @@ def test_call_cli():
 def test_call_command_args():
     call_command('testcmd')
     with pytest.raises(RuntimeError):
+        call_command('testcmd', '-r')
+    with pytest.raises(RuntimeError):
         call_command('testcmd', '--raise')
 
 
@@ -219,12 +221,8 @@ def test_django_help(manage):
 
 def test_django_version(manage):
     django_version = django.get_version().encode('ascii') + b'\n'
-    if django.VERSION < (1, 8):
-        prefix = django_version
-    else:
-        prefix = b''
-    assert manage('testcmd', '--version') == prefix + django_version
-    assert manage('versioncmd', '--version') == prefix + b'20.0\n'
+    assert manage('testcmd', '--version') == django_version
+    assert manage('versioncmd', '--version') == b'20.0\n'
 
 
 def test_group_command(capsys):

@@ -35,6 +35,14 @@ class ArgumentParserAdapter(object):
 class DjangoCommandMixin(object):
     use_argparse = False
     option_list = []
+    base_stealth_options = []
+
+    @property
+    def stealth_options(self):
+        return sum(
+            ([p.name] + [i.lstrip('-') for i in p.opts] for p in self.params),
+            [],
+        )
 
     def invoke(self, ctx):
         try:

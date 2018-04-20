@@ -22,10 +22,10 @@ env:
     - TOXENV=pypy-dj18
     - TOXENV=pypy-dj110
     - TOXENV=py27-dj111
-    - TOXENV=py34-dj111
-    - TOXENV=py35-dj111
-    - TOXENV=py36-dj111
-    - TOXENV=pypy-dj111
+    - TOXENV=py34-dj20
+    - TOXENV=py35-dj20
+    - TOXENV=py36-dj20
+    - TOXENV=pypy-dj20
     - TOXENV=flake8
 
 cache:
