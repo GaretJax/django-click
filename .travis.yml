@@ -26,7 +26,6 @@ env:
     - TOXENV=py34-dj20
     - TOXENV=py35-dj20
     - TOXENV=py36-dj20
-    - TOXENV=pypy-dj20
     - TOXENV=flake8
 
 cache:
