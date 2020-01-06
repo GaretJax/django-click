@@ -65,7 +65,7 @@ class DjangoCommandMixin(object):
             if exit_code:
                 sys.exit(exit_code)
         except click.ClickException as e:
-            if getattr(e.ctx, 'traceback', False):
+            if hasattr(e, 'ctx') and getattr(e.ctx, 'traceback', False):
                 raise
             e.show()
             sys.exit(e.exit_code)
