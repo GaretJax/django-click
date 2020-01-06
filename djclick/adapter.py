@@ -60,7 +60,10 @@ class DjangoCommandMixin(object):
         Called when run from the command line.
         """
         try:
-            return self.main(args=argv[2:], standalone_mode=False)
+            # We won't get an exception here in standalone_mode=False
+            exit_code = self.main(args=argv[2:], standalone_mode=False)
+            if exit_code:
+                sys.exit(exit_code)
         except click.ClickException as e:
             if getattr(e.ctx, 'traceback', False):
                 raise
