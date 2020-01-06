@@ -70,10 +70,10 @@ def test_call_command_required_args():
 
 def test_call_command_required_args_cli(manage):
     out = manage('requiredargcmd', ignore_errors=True)
-    assert out == (
-        b'Usage: manage.py requiredargcmd [OPTIONS] ARG\n'
+    assert out.lower() == (
+        b'usage: manage.py requiredargcmd [options] arg\n'
         b'\n'
-        b'Error: Missing argument "arg".\n'
+        b'error: missing argument "arg".\n'
     )
 
 
