@@ -1,3 +1,4 @@
+import os
 import sys
 from functools import update_wrapper
 
@@ -59,9 +60,10 @@ class DjangoCommandMixin(object):
         """
         Called when run from the command line.
         """
+        prog_name = '{} {}'.format(os.path.basename(argv[0]), argv[1])
         try:
             # We won't get an exception here in standalone_mode=False
-            exit_code = self.main(args=argv[2:], standalone_mode=False)
+            exit_code = self.main(args=argv[2:], prog_name=prog_name, standalone_mode=False)
             if exit_code:
                 sys.exit(exit_code)
         except click.ClickException as e:
@@ -80,16 +82,13 @@ class DjangoCommandMixin(object):
             return OptionParseAdapter()
 
     def print_help(self, prog_name, subcommand):
-        self.main(['--help'], standalone_mode=False)
+        prog_name = '{} {}'.format(prog_name, subcommand)
+        self.main(['--help'], prog_name=prog_name, standalone_mode=False)
 
     def map_names(self):
         for param in self.params:
             for opt in param.opts:
                 yield opt.lstrip('--').replace('-', '_'), param.name
-
-    def collect_usage_pieces(self, ctx):
-        pieces = super(DjangoCommandMixin, self).collect_usage_pieces(ctx)
-        return [self.name] + pieces
 
     def execute(self, *args, **kwargs):
         """
@@ -200,7 +199,6 @@ class BaseRegistrator(object):
     def get_params(self, name):
         def show_help(ctx, param, value):
             if value and not ctx.resilient_parsing:
-                ctx.info_name += ' ' + name
                 click.echo(ctx.get_help(), color=ctx.color)
                 ctx.exit()
 

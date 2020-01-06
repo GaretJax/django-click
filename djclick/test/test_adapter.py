@@ -219,6 +219,17 @@ def test_django_help(manage):
     assert help_text.startswith(b'Usage: manage.py helpcmd ')
 
 
+def test_command_name_in_help(manage):
+    # Doesn't matter which name, as long as we know it.
+    out = manage('helpcmd', '-h')
+    assert b'manage.py helpcmd [OPTIONS]' in out
+
+
+def test_command_names_in_subcommand_help(manage):
+    out = manage('groupcmd', 'subcmd1', '-h')
+    assert b'manage.py groupcmd subcmd1' in out
+
+
 def test_django_version(manage):
     django_version = django.get_version().encode('ascii') + b'\n'
     assert manage('testcmd', '--version') == django_version
