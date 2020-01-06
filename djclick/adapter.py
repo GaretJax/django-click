@@ -27,6 +27,7 @@ class ArgumentParserDefaults(object):
 class ArgumentParserAdapter(object):
     def __init__(self):
         self._actions = []
+        self._mutually_exclusive_groups = []
 
     def parse_args(self, args):
         return ArgumentParserDefaults(args)
