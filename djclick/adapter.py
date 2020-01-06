@@ -53,7 +53,8 @@ class DjangoCommandMixin(object):
             # Honor the --traceback flag
             if ctx.traceback:
                 raise
-            click.echo('{}: {}'.format(e.__class__.__name__, e), err=True)
+            styled_message = click.style('{}: {}'.format(e.__class__.__name__, e), fg='red', bold=True)
+            click.echo(styled_message, err=True)
             ctx.exit(1)
 
     def run_from_argv(self, argv):
