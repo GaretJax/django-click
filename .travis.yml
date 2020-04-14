@@ -8,24 +8,19 @@ addons:
       - deadsnakes
     packages:
       - pypy
-      - python3.5
+      - python3.6
 
-python: 3.6
+python: 3.7
 
 env:
   matrix:
-    - TOXENV=py27-dj18
-    - TOXENV=py27-dj110
-    - TOXENV=py34-dj18
-    - TOXENV=py34-dj110
-    - TOXENV=py35-dj18
-    - TOXENV=py35-dj110
-    - TOXENV=pypy-dj18
-    - TOXENV=pypy-dj110
-    - TOXENV=py27-dj111
-    - TOXENV=py34-dj20
-    - TOXENV=py35-dj20
+    - TOXENV=py36-dj111
+    - TOXENV=py37-dj111
+    - TOXENV=pypy-dj111
     - TOXENV=py36-dj20
+    - TOXENV=py37-dj20
+    - TOXENV=py36-dj21
+    - TOXENV=py37-dj21
     - TOXENV=flake8
 
 cache:

@@ -8,3 +8,5 @@ __pycache__
 /dist
 /docs/_build
 /.htmlcov
+*.egg-info/
+.vscode/
