@@ -29,6 +29,7 @@ cache:
     - $HOME/.wheelhouse
 
 install:
+  - pip install flake8
   - pip install tox
   - pip install coveralls
 
