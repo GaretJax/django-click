@@ -17,7 +17,7 @@ class ModelInstance(click.ParamType):
         self.lookup = lookup
 
     def convert(self, value, param, ctx):
-        if value is None:
+        if value is None:  # NOCOV
             return super(ModelInstance, self).convert(value, param, ctx)
         try:
             return self.qs.get(**{self.lookup: value})

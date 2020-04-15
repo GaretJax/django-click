@@ -1,7 +1,7 @@
 [run]
 branch = True
 parallel = True
-omit = setup.py, */migrations/*, */conftest.py
+omit = setup.py, */migrations/*, djclick/test/*
 
 [report]
 show_missing = true
