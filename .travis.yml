@@ -10,7 +10,9 @@ addons:
       - pypy
       - python3.6
 
-python: 3.7
+python:
+  - "3.6"
+  - "3.7"
 
 env:
   matrix:
@@ -21,7 +23,6 @@ env:
     - TOXENV=py37-dj20
     - TOXENV=py36-dj21
     - TOXENV=py37-dj21
-    - TOXENV=flake8
 
 cache:
   directories:
@@ -32,6 +33,10 @@ install:
   - pip install coveralls
 
 script:
+  - coverage erase
+  - flake8 djclick
   - tox -e $TOXENV
+  - coverage report
+  - coverage html
 
 after_success: coveralls
