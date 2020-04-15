@@ -16,13 +16,9 @@ python:
 
 env:
   matrix:
-    - TOXENV=py36-dj111
-    - TOXENV=py37-dj111
-    - TOXENV=pypy-dj111
-    - TOXENV=py36-dj20
-    - TOXENV=py37-dj20
-    - TOXENV=py36-dj21
-    - TOXENV=py37-dj21
+    - TOXENV=dj111
+    - TOXENV=dj20
+    - TOXENV=dj21
 
 cache:
   directories:
@@ -33,11 +29,16 @@ install:
   - pip install tox
   - pip install coveralls
 
+jobs:
+  include:
+    - name: flake8
+      python: "3.6"
+      script: flake8 djclick
+
 script:
-  - coverage erase
-  - flake8 djclick
   - tox -e $TOXENV
+
+after_success:
   - coverage report
   - coverage html
-
-after_success: coveralls
+  - coveralls
