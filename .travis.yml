@@ -37,8 +37,6 @@ jobs:
 
 script:
   - tox -e $TOXENV
-
-after_success:
   - coverage report
   - coverage html
   - coveralls
