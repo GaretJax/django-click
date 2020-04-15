@@ -1,5 +1,6 @@
 [run]
 branch = True
+parallel = True
 omit = setup.py, */migrations/*, */conftest.py
 
 [report]
