@@ -25,9 +25,7 @@ cache:
     - $HOME/.wheelhouse
 
 install:
-  - pip install flake8
-  - pip install tox
-  - pip install coveralls
+  - pip install flake8 tox 'coverage<5' coveralls
 
 jobs:
   include:
