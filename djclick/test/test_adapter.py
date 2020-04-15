@@ -71,7 +71,8 @@ def test_call_command_required_args():
 
 def test_call_command_required_args_cli(manage):
     out = manage('requiredargcmd', ignore_errors=True)
-    assert out.replace(b"'", b'"') == (  # may contain both single and double quotes
+    out = out.replace(b"'", b'"')  # may contain both single and double quotes
+    assert out == (
         b'Usage: manage.py requiredargcmd [OPTIONS] ARG\n'
         b'\n'
         b'Error: Missing argument "ARG".\n'
@@ -123,7 +124,8 @@ def test_django_verbosity(capsys, manage):
 
     # Invalid
     out = manage('ctxverbositycmd', '--verbosity', '4', ignore_errors=True)
-    assert out.replace(b"'", b'"') == (  # may contain both single and double quotes
+    out = out.replace(b"'", b'"')  # may contain both single and double quotes
+    assert out == (
         b'Usage: manage.py ctxverbositycmd [OPTIONS]\n'
         b'\n'
         b'Error: Invalid value for "-v" / "--verbosity": 4 is not in the '
@@ -151,7 +153,8 @@ def test_django_pythonpath(manage):
            os.path.join(os.path.dirname(__file__), 'testdir')) == b'1'
 
 
-@pytest.mark.xfail(reason="Looks like CommandError no longer results in non-zero exit status")
+@pytest.mark.xfail(reason="Looks like CommandError no longer "
+                          "results in non-zero exit status")
 def test_django_traceback(manage):
     with pytest.raises(subprocess.CalledProcessError) as e:
         manage('errcmd')
@@ -160,8 +163,8 @@ def test_django_traceback(manage):
 
     with pytest.raises(subprocess.CalledProcessError) as e:
         manage('errcmd', '--traceback')
-    
-    e = e.value    
+
+    e = e.value
 
     lines = e.output.splitlines()
     assert lines[0] == b'Traceback (most recent call last):'
