@@ -70,10 +70,10 @@ def test_call_command_required_args():
 
 def test_call_command_required_args_cli(manage):
     out = manage('requiredargcmd', ignore_errors=True)
-    assert out == (
-        b'Usage: manage.py requiredargcmd [OPTIONS] ARG\n'
+    assert out.lower() == (
+        b'usage: manage.py requiredargcmd [options] arg\n'
         b'\n'
-        b'Error: Missing argument "arg".\n'
+        b'error: missing argument "arg".\n'
     )
 
 
@@ -217,6 +217,17 @@ def test_django_help(manage):
     help_text = helps[0]
     assert b'HELP_CALLED' not in help_text
     assert help_text.startswith(b'Usage: manage.py helpcmd ')
+
+
+def test_command_name_in_help(manage):
+    # Doesn't matter which name, as long as we know it.
+    out = manage('helpcmd', '-h')
+    assert b'manage.py helpcmd [OPTIONS]' in out
+
+
+def test_command_names_in_subcommand_help(manage):
+    out = manage('groupcmd', 'subcmd1', '-h')
+    assert b'manage.py groupcmd subcmd1' in out
 
 
 def test_django_version(manage):
