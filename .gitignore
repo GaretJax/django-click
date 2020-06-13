@@ -10,3 +10,4 @@ __pycache__
 /.htmlcov
 *.egg-info/
 .vscode/
+venv/
