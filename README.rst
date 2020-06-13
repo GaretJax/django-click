@@ -34,8 +34,8 @@ Automated code metrics:
 ``click`` command line library.
 
 * Free software: MIT license
-* Documentation for the Click command line library: http://click.pocoo.org/6/
-* Compatible with Django 1.8, 1.10, and 1.11, running on Python 2.7, 3.4, 3.5, 3.6 and PyPy.
+* Documentation for the Click command line library: http://click.pocoo.org/7/
+* Compatible with Django 2.2 or 3.0 running on Python 3.6, 3.7, 3.8, and PyPy.
 
 
 Installation
