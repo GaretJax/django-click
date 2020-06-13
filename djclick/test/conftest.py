@@ -6,14 +6,14 @@ import sys
 import pytest
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def manage():
     def call(*args, **kwargs):
-        ignore_errors = kwargs.pop('ignore_errors', False)
+        ignore_errors = kwargs.pop("ignore_errors", False)
         assert not kwargs
         cmd = [
             sys.executable,
-            os.path.join(os.path.dirname(__file__), 'testprj', 'manage.py'),
+            os.path.join(os.path.dirname(__file__), "testprj", "manage.py"),
         ] + list(args)
         try:
             return subprocess.check_output(cmd, stderr=subprocess.STDOUT)
