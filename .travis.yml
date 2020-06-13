@@ -9,19 +9,14 @@ addons:
     packages:
       - pypy
       - python3.6
-      - python3.7
-      - python3.8
 
 python:
   - "3.6"
-  - "3.7"
-  - "3.8"
 
 env:
   matrix:
-    - TOXENV=py36-dj22
-    - TOXENV=py37-dj22
-    - TOXENV=py38-dj22
+    - TOXENV=dj22
+    - TOXENV=dj30
 
     - TOXENV=flake8
 
