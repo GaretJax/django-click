@@ -1,3 +1,4 @@
+import os
 import sys
 from functools import update_wrapper
 
@@ -28,6 +29,7 @@ class ArgumentParserDefaults(object):
 class ArgumentParserAdapter(object):
     def __init__(self):
         self._actions = []
+        self._mutually_exclusive_groups = []
 
     def parse_args(self, args):
         return ArgumentParserDefaults(args)
@@ -52,15 +54,20 @@ class DjangoCommandMixin(object):
             # Honor the --traceback flag
             if ctx.traceback:  # NOCOV
                 raise
-            click.echo('{}: {}'.format(e.__class__.__name__, e), err=True)
+            styled_message = click.style('{}: {}'.format(e.__class__.__name__, e), fg='red', bold=True)
+            click.echo(styled_message, err=True)
             ctx.exit(1)
 
     def run_from_argv(self, argv):
         """
         Called when run from the command line.
         """
+        prog_name = '{} {}'.format(os.path.basename(argv[0]), argv[1])
         try:
-            return self.main(args=argv[2:], standalone_mode=False)
+            # We won't get an exception here in standalone_mode=False
+            exit_code = self.main(args=argv[2:], prog_name=prog_name, standalone_mode=False)
+            if exit_code:
+                sys.exit(exit_code)
         except click.ClickException as e:
             if getattr(e.ctx, 'traceback', False):  # NOCOV
                 raise
@@ -77,16 +84,13 @@ class DjangoCommandMixin(object):
             return OptionParseAdapter()
 
     def print_help(self, prog_name, subcommand):
-        self.main(['--help'], standalone_mode=False)
+        prog_name = '{} {}'.format(prog_name, subcommand)
+        self.main(['--help'], prog_name=prog_name, standalone_mode=False)
 
     def map_names(self):
         for param in self.params:
             for opt in param.opts:
                 yield opt.lstrip('--').replace('-', '_'), param.name
-
-    def collect_usage_pieces(self, ctx):
-        pieces = super(DjangoCommandMixin, self).collect_usage_pieces(ctx)
-        return [self.name] + pieces
 
     def execute(self, *args, **kwargs):
         """
@@ -197,7 +201,6 @@ class BaseRegistrator(object):
     def get_params(self, name):
         def show_help(ctx, param, value):
             if value and not ctx.resilient_parsing:
-                ctx.info_name += ' ' + name
                 click.echo(ctx.get_help(), color=ctx.color)
                 ctx.exit()
 
