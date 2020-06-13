@@ -8,43 +8,20 @@ addons:
       - deadsnakes
     packages:
       - pypy
-      - python3.5
+      - python3.6
+      - python3.7
+      - python3.8
 
-python: 3.6
+python:
+  - "3.6"
+  - "3.7"
+  - "3.8"
 
 env:
   matrix:
-    - TOXENV=py27-dj18
-    - TOXENV=py34-dj18
-    - TOXENV=py35-dj18
-    - TOXENV=pypy-dj18
-
-    - TOXENV=py27-dj110
-    - TOXENV=py34-dj110
-    - TOXENV=py35-dj110
-    - TOXENV=pypy-dj110
-
-    - TOXENV=py27-dj111
-    - TOXENV=py34-dj111
-    - TOXENV=py35-dj111
-    - TOXENV=py36-dj111
-    - TOXENV=pypy-dj111
-
-    - TOXENV=py34-dj20
-    - TOXENV=py35-dj20
-    - TOXENV=py36-dj20
-    - TOXENV=py37-dj20
-
-    - TOXENV=py35-dj21
-    - TOXENV=py36-dj21
-    - TOXENV=py37-dj21
-    - TOXENV=py38-dj21
-
-    - TOXENV=py35-dj22
     - TOXENV=py36-dj22
     - TOXENV=py37-dj22
-    - TOXENV=py38-dj21
-
+    - TOXENV=py38-dj22
 
     - TOXENV=flake8
 
@@ -53,10 +30,16 @@ cache:
     - $HOME/.wheelhouse
 
 install:
-  - pip install tox
-  - pip install coveralls
+  - pip install flake8 tox 'coverage<5' coveralls
+
+jobs:
+  include:
+    - name: flake8
+      python: "3.6"
+      script: flake8 djclick
 
 script:
   - tox -e $TOXENV
-
-after_success: coveralls
+  - coverage report
+  - coverage html
+  - coveralls

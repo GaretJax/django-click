@@ -9,6 +9,12 @@ Unreleased
 * ...
 
 
+2.2.0 - 2020-04-14
+==================
+
+* Fix compatibility with latest `click`: remove `__all__`.
+
+
 2.1.0 - 2018-04-20
 ==================
 

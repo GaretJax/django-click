@@ -46,5 +46,8 @@ def test_convert_ok(call_command, arg, value):
 def test_convert_fail(call_command, args, error_message):
     with pytest.raises(BadParameter) as e:
         call_command('modelcmd', *args)
-    assert e.match(
-        'could not find testapp.DummyModel with {}'.format(error_message))
+    # Use `.endswith()` because of differences between CPython and pypy
+    assert e.type is BadParameter
+    assert str(e.value).endswith(
+        'could not find testapp.DummyModel with {}'.format(
+            error_message))

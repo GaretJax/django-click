@@ -11,8 +11,9 @@ from django.core.management import CommandError
 
 
 class OptionParseAdapter(object):
+    """Django pre-1.10-compatible adapter, deprecated"""
     def parse_args(self, args):
-        return (self, None)
+        return (self, None)  # NOCOV
 
 
 class ArgumentParserDefaults(object):
@@ -51,7 +52,7 @@ class DjangoCommandMixin(object):
             return super(DjangoCommandMixin, self).invoke(ctx)
         except CommandError as e:
             # Honor the --traceback flag
-            if ctx.traceback:
+            if ctx.traceback:  # NOCOV
                 raise
             styled_message = click.style('{}: {}'.format(e.__class__.__name__, e), fg='red', bold=True)
             click.echo(styled_message, err=True)
@@ -68,7 +69,7 @@ class DjangoCommandMixin(object):
             if exit_code:
                 sys.exit(exit_code)
         except click.ClickException as e:
-            if hasattr(e, 'ctx') and getattr(e.ctx, 'traceback', False):
+            if getattr(e.ctx, 'traceback', False):  # NOCOV
                 raise
             e.show()
             sys.exit(e.exit_code)
@@ -79,7 +80,7 @@ class DjangoCommandMixin(object):
         """
         if DJANGO_VERSION >= (1, 10):
             return ArgumentParserAdapter()
-        else:
+        else:  # NOCOV
             return OptionParseAdapter()
 
     def print_help(self, prog_name, subcommand):
