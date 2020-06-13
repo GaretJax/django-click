@@ -87,10 +87,6 @@ class Setup(object):
     @staticmethod
     def get_metavar(name):
         data = Setup.read(os.path.join(PACKAGE, "__init__.py"))
-<<<<<<< HEAD
-        print(name)
-=======
->>>>>>> c3337038f32900ebc5e606c621f1f28b537f64b8
         value = (
             re.search(u"__{}__\s*=\s*u?'([^']+)'".format(name), data).group(1).strip()
         )
