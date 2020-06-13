@@ -1,3 +1,3 @@
 from .settings import *  # NOQA
 
-SETTINGS_NAME = 'alternative'
+SETTINGS_NAME = "alternative"

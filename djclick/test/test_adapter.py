@@ -16,10 +16,10 @@ from django.core.management import execute_from_command_line
 import djclick
 
 
-todo = pytest.mark.xfail(reason='TODO')
+todo = pytest.mark.xfail(reason="TODO")
 
 
-@pytest.mark.skipif(not six.PY3, reason='Only necessary on Python3')
+@pytest.mark.skipif(not six.PY3, reason="Only necessary on Python3")
 def test_not_ascii():  # NOCOV
     """
     Make sure that the systems preferred encoding is not `ascii`.
@@ -35,60 +35,60 @@ def test_not_ascii():  # NOCOV
         preferred_encoding = locale.getpreferredencoding()
         fs_enc = codecs.lookup(preferred_encoding).name
     except Exception:
-        fs_enc = 'ascii'
-    assert fs_enc != 'ascii'
+        fs_enc = "ascii"
+    assert fs_enc != "ascii"
 
 
 def test_attributes():
     for attr in dir(click):
-        if not attr.startswith('_'):
+        if not attr.startswith("_"):
             assert hasattr(djclick, attr)
 
 
 def test_command_recognized():
-    assert 'testcmd' in get_commands()
+    assert "testcmd" in get_commands()
 
 
 def test_call_cli():
-    execute_from_command_line(['./manage.py', 'testcmd'])
+    execute_from_command_line(["./manage.py", "testcmd"])
     with pytest.raises(RuntimeError):
-        execute_from_command_line(['./manage.py', 'testcmd', '--raise'])
+        execute_from_command_line(["./manage.py", "testcmd", "--raise"])
 
 
 def test_call_command_args():
-    call_command('testcmd')
+    call_command("testcmd")
     with pytest.raises(RuntimeError):
-        call_command('testcmd', '-r')
+        call_command("testcmd", "-r")
     with pytest.raises(RuntimeError):
-        call_command('testcmd', '--raise')
+        call_command("testcmd", "--raise")
 
 
 def test_call_command_required_args():
-    call_command('requiredargcmd', 'arg1')
+    call_command("requiredargcmd", "arg1")
     with pytest.raises(click.MissingParameter):
-        call_command('requiredargcmd')
+        call_command("requiredargcmd")
 
 
 def test_call_command_required_args_cli(manage):
-    out = manage('requiredargcmd', ignore_errors=True)
+    out = manage("requiredargcmd", ignore_errors=True)
     out = out.replace(b"'", b'"')  # may contain both single and double quotes
     assert out == (
-        b'Usage: manage.py requiredargcmd [OPTIONS] ARG\n'
-        b'\n'
+        b"Usage: manage.py requiredargcmd [OPTIONS] ARG\n"
+        b"\n"
         b'Error: Missing argument "ARG".\n'
     )
 
 
 def test_call_command_kwargs():
-    call_command('testcmd', raise_when_called=False)
+    call_command("testcmd", raise_when_called=False)
     with pytest.raises(RuntimeError):
-        call_command('testcmd', raise_when_called=True)
+        call_command("testcmd", raise_when_called=True)
 
 
 def test_call_command_kwargs_rename():
-    call_command('testcmd', **{'raise': False})
+    call_command("testcmd", **{"raise": False})
     with pytest.raises(RuntimeError):
-        call_command('testcmd', **{'raise': True})
+        call_command("testcmd", **{"raise": True})
 
 
 def test_call_directly():
@@ -100,78 +100,79 @@ def test_call_directly():
         command(raise_when_called=True)
 
     with pytest.raises(RuntimeError):
-        command(**{'raise': True})
+        command(**{"raise": True})
 
 
 def test_django_verbosity(capsys, manage):
     # Make sure any command can be called, even if it does not explictly
     # accept the --verbosity option
     with pytest.raises(RuntimeError):
-        execute_from_command_line([
-            './manage.py', 'testcmd', '--raise', '--verbosity', '1'])
+        execute_from_command_line(
+            ["./manage.py", "testcmd", "--raise", "--verbosity", "1"]
+        )
 
     # Default
-    execute_from_command_line([
-        './manage.py', 'ctxverbositycmd'])
+    execute_from_command_line(["./manage.py", "ctxverbositycmd"])
     out, err = capsys.readouterr()
-    assert out == '1'
+    assert out == "1"
 
     # Explicit
-    execute_from_command_line([
-        './manage.py', 'ctxverbositycmd', '--verbosity', '2'])
+    execute_from_command_line(["./manage.py", "ctxverbositycmd", "--verbosity", "2"])
     out, err = capsys.readouterr()
-    assert out == '2'
+    assert out == "2"
 
     # Invalid
-    out = manage('ctxverbositycmd', '--verbosity', '4', ignore_errors=True)
+    out = manage("ctxverbositycmd", "--verbosity", "4", ignore_errors=True)
     out = out.replace(b"'", b'"')  # may contain both single and double quotes
     assert out == (
-        b'Usage: manage.py ctxverbositycmd [OPTIONS]\n'
-        b'\n'
+        b"Usage: manage.py ctxverbositycmd [OPTIONS]\n"
+        b"\n"
         b'Error: Invalid value for "-v" / "--verbosity": 4 is not in the '
-        b'valid range of 0 to 3.\n'
+        b"valid range of 0 to 3.\n"
     )
 
     # Default (option)
-    execute_from_command_line([
-        './manage.py', 'argverbositycommand'])
+    execute_from_command_line(["./manage.py", "argverbositycommand"])
     out, err = capsys.readouterr()
-    assert out == '1'
+    assert out == "1"
 
     # Explicit (option)
-    execute_from_command_line([
-        './manage.py', 'argverbositycommand', '--verbosity', '2'])
+    execute_from_command_line(
+        ["./manage.py", "argverbositycommand", "--verbosity", "2"]
+    )
     out, err = capsys.readouterr()
-    assert out == '2'
+    assert out == "2"
 
 
 def test_django_pythonpath(manage):
     with pytest.raises(subprocess.CalledProcessError):
-        manage('pathcmd')
+        manage("pathcmd")
 
-    manage('pathcmd', '--pythonpath',
-           os.path.join(os.path.dirname(__file__), 'testdir')) == b'1'
+    manage(
+        "pathcmd", "--pythonpath", os.path.join(os.path.dirname(__file__), "testdir")
+    ) == b"1"
 
 
-@pytest.mark.xfail(reason="Looks like CommandError no longer "
-                          "results in non-zero exit status")
+@pytest.mark.xfail(
+    reason="Looks like CommandError no longer " "results in non-zero exit status"
+)
 def test_django_traceback(manage):
     with pytest.raises(subprocess.CalledProcessError) as e:
-        manage('errcmd')
-    assert e.value.output == b'CommandError: Raised error description\n'
+        manage("errcmd")
+    assert e.value.output == b"CommandError: Raised error description\n"
     assert e.value.returncode == 1
 
     with pytest.raises(subprocess.CalledProcessError) as e:
-        manage('errcmd', '--traceback')
+        manage("errcmd", "--traceback")
 
     e = e.value
 
     lines = e.output.splitlines()
-    assert lines[0] == b'Traceback (most recent call last):'
+    assert lines[0] == b"Traceback (most recent call last):"
     for line in lines[1:-1]:
-        assert line.startswith(b'  ')
+        assert line.startswith(b"  ")
     # Use `.endswith()` because of differences between CPython and pypy
-    assert lines[-1].endswith(b'CommandError: Raised error description')
+    assert lines[-1].endswith(b"CommandError: Raised error description")
     assert e.returncode == 1
 
 
@@ -179,30 +180,30 @@ def test_django_settings(manage):
     # The --settings switch only works from the command line (or if the django
     # settings where not setup before)... this means that we have to call it
     # in a subprocess.
-    cmd = 'settingscmd'
-    assert manage(cmd) == b'default'
-    assert manage(cmd, '--settings', 'testprj.settings') == b'default'
-    assert manage(cmd, '--settings', 'testprj.settings_alt') == b'alternative'
+    cmd = "settingscmd"
+    assert manage(cmd) == b"default"
+    assert manage(cmd, "--settings", "testprj.settings") == b"default"
+    assert manage(cmd, "--settings", "testprj.settings_alt") == b"alternative"
 
 
 def test_django_color(capsys):
-    call_command('colorcmd')
+    call_command("colorcmd")
     out, err = capsys.readouterr()
     # Not passing a --color/--no-color flag defaults to autodetection. As the
     # command is run through the test suite, the autodetection defaults to not
     # colorizing the output.
-    assert out == 'stdout'
-    assert err == 'stderr'
+    assert out == "stdout"
+    assert err == "stderr"
 
-    call_command('colorcmd', '--color')
+    call_command("colorcmd", "--color")
     out, err = capsys.readouterr()
-    assert out == click.style('stdout', fg='blue')
-    assert err == click.style('stderr', bg='red')
+    assert out == click.style("stdout", fg="blue")
+    assert err == click.style("stderr", bg="red")
 
-    call_command('colorcmd', '--no-color')
+    call_command("colorcmd", "--no-color")
     out, err = capsys.readouterr()
-    assert out == 'stdout'
-    assert err == 'stderr'
+    assert out == "stdout"
+    assert err == "stderr"
 
 
 def test_django_help(manage):
@@ -210,43 +211,43 @@ def test_django_help(manage):
     # through execute_from_command_line would cause the test suite to exit as
     # well... this means that we have to call it in a subprocess.
     helps = [
-        manage('helpcmd', '-h'),
-        manage('helpcmd', '--help'),
-        manage('help', 'helpcmd'),
+        manage("helpcmd", "-h"),
+        manage("helpcmd", "--help"),
+        manage("help", "helpcmd"),
     ]
     assert len(set(helps)) == 1
 
     help_text = helps[0]
-    assert b'HELP_CALLED' not in help_text
-    assert help_text.startswith(b'Usage: manage.py helpcmd ')
+    assert b"HELP_CALLED" not in help_text
+    assert help_text.startswith(b"Usage: manage.py helpcmd ")
 
 
 def test_command_name_in_help(manage):
     # Doesn't matter which name, as long as we know it.
-    out = manage('helpcmd', '-h')
-    assert b'manage.py helpcmd [OPTIONS]' in out
+    out = manage("helpcmd", "-h")
+    assert b"manage.py helpcmd [OPTIONS]" in out
 
 
 def test_command_names_in_subcommand_help(manage):
-    out = manage('groupcmd', 'subcmd1', '-h')
-    assert b'manage.py groupcmd subcmd1' in out
+    out = manage("groupcmd", "subcmd1", "-h")
+    assert b"manage.py groupcmd subcmd1" in out
 
 
 def test_django_version(manage):
-    django_version = django.get_version().encode('ascii') + b'\n'
-    assert manage('testcmd', '--version') == django_version
-    assert manage('versioncmd', '--version') == b'20.0\n'
+    django_version = django.get_version().encode("ascii") + b"\n"
+    assert manage("testcmd", "--version") == django_version
+    assert manage("versioncmd", "--version") == b"20.0\n"
 
 
 def test_group_command(capsys):
-    execute_from_command_line(['./manage.py', 'groupcmd'])
+    execute_from_command_line(["./manage.py", "groupcmd"])
     out, err = capsys.readouterr()
-    assert out == 'group_command\n'
+    assert out == "group_command\n"
 
-    execute_from_command_line(['./manage.py', 'groupcmd', 'subcmd1'])
+    execute_from_command_line(["./manage.py", "groupcmd", "subcmd1"])
     out, err = capsys.readouterr()
-    assert out == 'group_command\nSUB1\n'
+    assert out == "group_command\nSUB1\n"
 
-    execute_from_command_line(['./manage.py', 'groupcmd', 'subcmd3'])
+    execute_from_command_line(["./manage.py", "groupcmd", "subcmd3"])
     out, err = capsys.readouterr()
-    assert out == 'group_command\nSUB2\n'
+    assert out == "group_command\nSUB2\n"
