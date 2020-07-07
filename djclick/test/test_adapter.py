@@ -3,8 +3,6 @@ import locale
 import codecs
 import subprocess
 
-import six
-
 import pytest
 
 import click
@@ -16,10 +14,6 @@ from django.core.management import execute_from_command_line
 import djclick
 
 
-todo = pytest.mark.xfail(reason="TODO")
-
-
-@pytest.mark.skipif(not six.PY3, reason="Only necessary on Python3")
 def test_not_ascii():  # NOCOV
     """
     Make sure that the systems preferred encoding is not `ascii`.

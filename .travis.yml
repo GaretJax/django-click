@@ -14,11 +14,8 @@ python:
   - "3.6"
 
 env:
-  matrix:
-    - TOXENV=dj22
-    - TOXENV=dj30
-
-    - TOXENV=flake8
+  - TOXENV=dj22
+  - TOXENV=dj30
 
 cache:
   directories:
@@ -27,14 +24,12 @@ cache:
 install:
   - pip install flake8 tox 'coverage<5' coveralls
 
-jobs:
-  include:
-    - name: flake8
-      python: "3.6"
-      script: flake8 djclick
-
 script:
   - tox -e $TOXENV
   - coverage report
   - coverage html
   - coveralls
+
+jobs:
+  include:
+    - script: tox -e flake8
