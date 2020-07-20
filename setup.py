@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 
 PACKAGE = "djclick"
 PACKAGE_NAME = "django-click"
-DESCRIPTION = "Write Django management command using the click CLI library"
+DESCRIPTION = "Build Django management commands using the click CLI package."
 CLASSIFIERS = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
