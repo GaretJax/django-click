@@ -12,7 +12,6 @@ check-manifest
 flake8
 mccabe
 pep8
-flake8-todo
 pep8-naming
 pyflakes
 

@@ -2,8 +2,6 @@ import os
 import sys
 from functools import update_wrapper
 
-import six
-
 import click
 
 from django import get_version, VERSION as DJANGO_VERSION
@@ -110,7 +108,7 @@ class DjangoCommandMixin(object):
             # Rename kwargs to to the appropriate destination argument name
             opt_mapping = dict(self.map_names())
             arg_options = {
-                opt_mapping.get(key, key): value for key, value in six.iteritems(kwargs)
+                opt_mapping.get(key, key): value for key, value in kwargs.items()
             }
 
             # Update the context with the passed (renamed) kwargs
