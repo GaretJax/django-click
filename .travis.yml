@@ -16,6 +16,7 @@ python:
 env:
   - TOXENV=dj22
   - TOXENV=dj30
+  - TOXENV=dj31
 
 cache:
   directories:
