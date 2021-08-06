@@ -170,6 +170,13 @@ def test_django_traceback(manage):
     assert e.returncode == 1
 
 
+def test_click_exception(manage):
+    with pytest.raises(subprocess.CalledProcessError) as e:
+        manage("clickexceptioncmd")
+    assert e.value.output == b"Error: Raised error description\n"
+    assert e.value.returncode == 1
+
+
 def test_django_settings(manage):
     # The --settings switch only works from the command line (or if the django
     # settings where not setup before)... this means that we have to call it
