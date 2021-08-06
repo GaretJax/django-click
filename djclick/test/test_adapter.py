@@ -147,9 +147,6 @@ def test_django_pythonpath(manage):
     ) == b"1"
 
 
-@pytest.mark.xfail(
-    reason="Looks like CommandError no longer " "results in non-zero exit status"
-)
 def test_django_traceback(manage):
     with pytest.raises(subprocess.CalledProcessError) as e:
         manage("errcmd")
