@@ -122,7 +122,7 @@ def test_django_verbosity(capsys, manage):
         b"Usage: manage.py ctxverbositycmd [OPTIONS]\n"
         b"\n"
         b'Error: Invalid value for "-v" / "--verbosity": 4 is not in the '
-        b"valid range of 0 to 3.\n"
+        b"range 0<=x<=3.\n"
     )
 
     # Default (option)
