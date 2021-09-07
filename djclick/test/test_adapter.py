@@ -147,9 +147,6 @@ def test_django_pythonpath(manage):
     ) == b"1"
 
 
-@pytest.mark.xfail(
-    reason="Looks like CommandError no longer " "results in non-zero exit status"
-)
 def test_django_traceback(manage):
     with pytest.raises(subprocess.CalledProcessError) as e:
         manage("errcmd")
@@ -168,6 +165,13 @@ def test_django_traceback(manage):
     # Use `.endswith()` because of differences between CPython and pypy
     assert lines[-1].endswith(b"CommandError: Raised error description")
     assert e.returncode == 1
+
+
+def test_click_exception(manage):
+    with pytest.raises(subprocess.CalledProcessError) as e:
+        manage("clickexceptioncmd")
+    assert e.value.output == b"Error: Raised error description\n"
+    assert e.value.returncode == 1
 
 
 def test_django_settings(manage):
