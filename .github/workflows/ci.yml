@@ -48,7 +48,7 @@ jobs:
 
       - name: Install tox
         run: |
-          pip install flake8 tox 'coverage<5' coveralls
+          pip install flake8 tox tox-gh-actions 'coverage<5' coveralls
 
       - name: Run tox and coverage
         run: |
