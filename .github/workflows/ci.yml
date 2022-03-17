@@ -1,0 +1,78 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      # By default, GitHub will maximize the number of jobs run in parallel
+      # depending on the available runners on GitHub-hosted virtual machines.
+      # max-parallel: 8
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.6"
+          - "3.7"
+          - "3.8"
+          - "3.9"
+          - "pypy-3.6"
+          - "pypy-3.7"
+        tox-env:
+          - "dj22" # LTS
+          - "dj31"
+          - "dj32" # LTS
+        exclude:
+          # Python 3.9 is compatible with Django 3.1+
+          - python-version: "3.9"
+            tox-env: "dj22"
+          - python-version: "3.9"
+            tox-env: "dj30"
+
+    env:
+      TOXENV: ${{ matrix.tox-env }}
+      # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Upgrade pip version
+        run: |
+          python -m pip install -U pip
+
+      - name: Install tox and coverage packages
+        run: |
+          pip install tox tox-gh-actions 'coverage<5' coveralls
+
+      - name: Run tox and coverage
+        run: |
+          tox -e $TOXENV
+          coverage report
+          coverage html
+
+      # - name: Upload coverage to coveralls
+      #   run: |
+      #     coveralls
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.6'
+
+    - name: Install tox and flake8 packages
+      run: pip install tox tox-gh-actions flake8
+
+    - name: Lint
+      run: tox -e flake8
