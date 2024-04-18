@@ -13,22 +13,24 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - "3.6"
-          - "3.7"
           - "3.8"
           - "3.9"
-          - "pypy-3.6"
-          - "pypy-3.7"
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "pypy-3.9"
+          - "pypy-3.10"
         tox-env:
-          - "dj22" # LTS
-          - "dj31"
-          - "dj32" # LTS
+          - "dj42" # LTS
+          - "dj50"
         exclude:
-          # Python 3.9 is compatible with Django 3.1+
+          # Python 3.8/3.9 is incompatible with Django 5.0+
+          - python-version: "3.8"
+            tox-env: "dj50"
           - python-version: "3.9"
-            tox-env: "dj22"
-          - python-version: "3.9"
-            tox-env: "dj30"
+            tox-env: "dj50"
+          - python-version: "pypy-3.9"
+            tox-env: "dj50"
 
     env:
       TOXENV: ${{ matrix.tox-env }}
