@@ -27,15 +27,12 @@ Automated code metrics:
 .. image:: https://img.shields.io/codeclimate/github/GaretJax/django-click.svg
    :target: https://codeclimate.com/github/GaretJax/django-click
 
-.. image:: https://img.shields.io/requires/github/GaretJax/django-click.svg
-   :target: https://requires.io/github/GaretJax/django-click/requirements/?branch=master
-
 ``django-click`` is a library to easily write Django management commands using the
 ``click`` command line library.
 
 * Free software: MIT license
 * Documentation for the Click command line library: https://click.palletsprojects.com/en/8.0.x/
-* Compatible with Django 2.2, 3.1, or 3.2 running on Python 3.6, 3.7, 3.8, 3.9, and PyPy.
+* Compatible with Django 4.2 and 5.0 running on Python 3.8, 3.9, 3.10, 3.11, and 3.12 (note: 3.10+ required for Django 5.0).
 
 
 Installation
