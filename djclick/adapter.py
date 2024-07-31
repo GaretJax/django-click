@@ -4,15 +4,8 @@ from functools import update_wrapper
 
 import click
 
-from django import get_version, VERSION as DJANGO_VERSION
+from django import get_version
 from django.core.management import CommandError
-
-
-class OptionParseAdapter(object):
-    """Django pre-1.10-compatible adapter, deprecated"""
-
-    def parse_args(self, args):
-        return (self, None)  # NOCOV
 
 
 class ArgumentParserDefaults(object):
@@ -80,10 +73,7 @@ class DjangoCommandMixin(object):
         """
         Called when run through `call_command`.
         """
-        if DJANGO_VERSION >= (1, 10):
-            return ArgumentParserAdapter()
-        else:  # NOCOV
-            return OptionParseAdapter()
+        return ArgumentParserAdapter()
 
     def print_help(self, prog_name, subcommand):
         prog_name = "{} {}".format(prog_name, subcommand)
