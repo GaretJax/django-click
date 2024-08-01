@@ -9,10 +9,35 @@ Unreleased
 * ...
 
 
-2.2.0 - 2020-04-14
+2.4.0 - 2024-04-21
 ==================
 
-* Fix compatibility with latest `click`: remove `__all__`.
+* Ports travis.yml to GitHub Actions in #35 by @joshuadavidthomas
+* Update the link to Click docs in #37 by @allen-munsch
+* Update supported Python and Django versions in #41 by @philipstarkey
+* Updates the linting CI task and tox config to run with the latest tox in #41 by @philipstarkey
+
+
+2.3.0 - 2021-09-07
+==================
+
+* Add support for click > 8.0.
+* Remove upper bounds, until we run into an upward compatibility issue.
+* Drop support for Django 3.0.
+
+
+2.2.0 - 2020-07-21
+==================
+
+* Add support for click > 7.1
+* Require Python 3.6 or higher.
+* Require Django 2.2 or higher.
+
+
+2.1.1 - 2020-06-12
+==================
+
+* Ensure click is 7.0.x or lower.
 
 
 2.1.0 - 2018-04-20
