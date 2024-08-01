@@ -18,14 +18,8 @@ Project information:
 
 Automated code metrics:
 
-.. image:: https://img.shields.io/travis/GaretJax/django-click.svg
-   :target: https://travis-ci.org/GaretJax/django-click
-
 .. image:: https://img.shields.io/coveralls/GaretJax/django-click/master.svg
    :target: https://coveralls.io/r/GaretJax/django-click?branch=master
-
-.. image:: https://img.shields.io/codeclimate/github/GaretJax/django-click.svg
-   :target: https://codeclimate.com/github/GaretJax/django-click
 
 ``django-click`` is a library to easily write Django management commands using the
 ``click`` command line library.
@@ -67,3 +61,11 @@ And then call the command with::
 Check out the `test commands
 <https://github.com/GaretJax/django-click/tree/master/djclick/test/testprj/testapp/management/commands>`_
 for additional example commands and advanced usage.
+
+Release Notes and Contributors
+==============================
+
+* `Release Notes on GitHub <https://github.com/GaretJax/django-click/releases>`_
+* `Our Wonderful Contributors <https://github.com/GaretJax/django-click/graphs/contributors>`_
+
+This package is maintained by `Jonathan Stoppani <https://github.com/GaretJax/>`_ and `Timothy Allen <https://github.com/FlipperPA/>`_, who have many professional responsibilities. We are thrilled that our employers allow us a certain amount of time to contribute to open-source projects. We add features as they are necessary for our projects, and try to keep up with Issues and Pull Requests as best we can. Due to constraints of time (our full time jobs!), Feature Requests without a Pull Request may not be implemented, but we are always open to new ideas and grateful for contributions and our users.
