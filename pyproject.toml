@@ -1,0 +1,82 @@
+[build-system]
+requires = ["setuptools>=78.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-click"
+dynamic = ["version"]
+description = "Build Django management commands using the click CLI package."
+readme = "README.rst"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name = "Jonathan Stoppani", email = "jonathan@stoppani.name" },
+]
+maintainers = [
+  {name = "Jonathan Stoppani" },
+  {name = "Timothy Allen"},
+]
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.2",
+    "Framework :: Django :: 6.0",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+  "click>=7.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/django-commons/django-click"
+
+[dependency-groups]
+all = [
+  {include-group = "docs"},
+  {include-group = "test"},
+]
+docs = [
+    "Sphinx",
+    "sphinx-autobuild",
+    "sphinx_rtd_theme",
+]
+test = [
+    "pytest",
+    "coverage<8",
+    "pytest-django",
+    "pytest-cov",
+]
+
+
+[tool.setuptools.packages.find]
+include = ["djclick"]
+
+[tool.setuptools.package-data]
+"djclick" = ["**/*"]
+
+[tool.setuptools.exclude-package-data]
+"djclick" = [
+    "test/*",
+    "test/**/*",
+]
+
+[tool.setuptools.data-files]
+"." = [
+  "CONTRIBUTING.rst",
+]
+
+
+[tool.flake8]
+max-line-length = 88
+
+[tool.setuptools.dynamic]
+version = { attr = "djclick.__version__" }

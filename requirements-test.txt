@@ -1,6 +1,0 @@
--r requirements.txt
-
-pytest
-coverage<8
-pytest-django
-pytest-cov
