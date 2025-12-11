@@ -91,8 +91,6 @@ class DjangoCommandMixin:
         `self.create_parser('', name)` updated with the kwargs passed to
         `call_command`.
         """
-        # Remove internal Django command handling machinery
-        kwargs.pop("skip_checks", None)
         parent_ctx = click.get_current_context(silent=True)
         with self.make_context("", list(args), parent=parent_ctx) as ctx:
             # Rename kwargs to to the appropriate destination argument name
