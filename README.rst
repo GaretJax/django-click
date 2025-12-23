@@ -16,6 +16,14 @@ Project information:
 .. image:: https://img.shields.io/pypi/l/django-click.svg
    :target: https://github.com/GaretJax/django-click/blob/master/LICENSE
 
+.. |python-support| image:: https://img.shields.io/pypi/pyversions/django-click
+   :target: https://pypi.python.org/pypi/django-click
+   :alt: Supported Python versions
+
+.. |django-support| image:: https://img.shields.io/pypi/djversions/django-click
+   :target: https://pypi.python.org/pypi/django-click
+   :alt: Supported Django versions
+
 Automated code metrics:
 
 .. image:: https://img.shields.io/coveralls/GaretJax/django-click/master.svg
