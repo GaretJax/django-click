@@ -19,7 +19,6 @@ jobs:
           - "3.13"
           - "3.14"
         tox-env:
-          - "dj42" # LTS
           - "dj52" # LTS
           - "dj60"
           - "djmain"
