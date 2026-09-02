@@ -1,6 +1,7 @@
 import os
 import locale
 import codecs
+import io
 import subprocess
 
 import pytest
@@ -83,6 +84,26 @@ def test_call_command_kwargs_rename():
     call_command("testcmd", **{"raise": False})
     with pytest.raises(RuntimeError):
         call_command("testcmd", **{"raise": True})
+
+
+def test_call_command_stdout():
+    """
+    `call_command`'s `stdout`/`stderr` stealth options should be accepted,
+    and the command's output should actually be captured through them.
+
+    https://github.com/django-commons/django-click/issues/28
+    https://github.com/django-commons/django-click/issues/10
+    """
+    buffer = io.StringIO()
+    call_command("helpcmd", stdout=buffer)
+    assert "HELP_CALLED" in buffer.getvalue()
+
+
+def test_call_command_stderr():
+    buffer = io.StringIO()
+    with pytest.raises(click.exceptions.Exit):
+        call_command("errcmd", stderr=buffer)
+    assert "Raised error description" in buffer.getvalue()
 
 
 def test_call_directly():

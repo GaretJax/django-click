@@ -1,3 +1,4 @@
+import contextlib
 import os
 import sys
 from functools import update_wrapper
@@ -30,7 +31,7 @@ class ArgumentParserAdapter:
 class DjangoCommandMixin:
     use_argparse = False
     option_list = []
-    base_stealth_options = []
+    base_stealth_options = ["stderr", "stdout"]
 
     @property
     def stealth_options(self):
@@ -93,6 +94,12 @@ class DjangoCommandMixin:
         """
         # Remove internal Django command handling machinery
         kwargs.pop("skip_checks", None)
+        # `stdout`/`stderr` are Django's stealth options for capturing a
+        # command's output (e.g. in tests) - they aren't real click
+        # options, so redirect click's output to them here instead of
+        # forwarding them on as unexpected keyword arguments.
+        stdout = kwargs.pop("stdout", None)
+        stderr = kwargs.pop("stderr", None)
         parent_ctx = click.get_current_context(silent=True)
         with self.make_context("", list(args), parent=parent_ctx) as ctx:
             # Rename kwargs to to the appropriate destination argument name
@@ -105,7 +112,12 @@ class DjangoCommandMixin:
             ctx.params.update(arg_options)
 
             # Invoke the command
-            self.invoke(ctx)
+            with contextlib.ExitStack() as stack:
+                if stdout is not None:
+                    stack.enter_context(contextlib.redirect_stdout(stdout))
+                if stderr is not None:
+                    stack.enter_context(contextlib.redirect_stderr(stderr))
+                self.invoke(ctx)
 
     def __call__(self, *args, **kwargs):
         """
