@@ -174,6 +174,20 @@ def test_click_exception(manage):
     assert e.value.returncode == 1
 
 
+def test_abort(manage):
+    """
+    A command raising `click.Abort` (or a Ctrl-C/KeyboardInterrupt, which
+    click itself converts to `Abort`) should exit cleanly instead of
+    surfacing an unhandled traceback.
+
+    https://github.com/django-commons/django-click/issues/39
+    """
+    with pytest.raises(subprocess.CalledProcessError) as e:
+        manage("abortcmd")
+    assert e.value.output == b"Aborted!\n"
+    assert e.value.returncode == 1
+
+
 def test_django_settings(manage):
     # The --settings switch only works from the command line (or if the django
     # settings where not setup before)... this means that we have to call it

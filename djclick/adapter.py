@@ -68,6 +68,12 @@ class DjangoCommandMixin:
                 raise
             e.show()
             sys.exit(e.exit_code)
+        except click.Abort:
+            # Mirrors click's own standalone_mode handling of Abort (e.g.
+            # Ctrl-C, or a command explicitly raising it) - a clean exit
+            # instead of an unhandled traceback.
+            click.echo("Aborted!", file=sys.stderr)
+            sys.exit(1)
 
     def create_parser(self, progname, subcommand):
         """
